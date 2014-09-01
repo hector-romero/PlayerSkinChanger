@@ -1,0 +1,16 @@
+name: PlayerSkinChanger
+main: fr.skyost.playerskinchanger.PlayerSkinChanger
+description: Allows you to change your skin without client mod !
+version: 0.3
+author: Skyost
+softdepend: [ProtocolLib]
+website: http://www.skyost.eu/
+commands:
+ psc:
+  description: Main command of the plugin.
+  usage: /psc <skin> <name>
+  permission: playerskinchanger.use
+permissions:
+ playerskinchanger.use:
+  default: op
+  description: Allows you to use the plugin.
