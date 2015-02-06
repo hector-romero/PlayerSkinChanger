@@ -10,6 +10,19 @@ commands:
   description: Main command of the plugin.
   usage: /psc <skin> <name>
   permission: playerskinchanger.use
+ setskin:
+  description: Main command of the plugin.
+  usage: /setskin <user> <skin>
+  permission: playerskinchanger.use
+ pscreload:
+  description: Main command of the plugin.
+  usage: /pscreload
+  permission: playerskinchanger.use
+ getskin:
+  description: Main command of the plugin.
+  usage: /getskin <player>
+  permission: playerskinchanger.use
+
 permissions:
  playerskinchanger.use:
   default: op

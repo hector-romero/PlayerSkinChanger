@@ -18,12 +18,15 @@ public class EventsListener implements Listener {
 	@EventHandler
 	private final void onPlayerJoin(final PlayerJoinEvent event) throws ParseException {
 		final Player player = event.getPlayer();
-		if(!PlayerSkinChanger.getRAWCache().containsKey(player.getName())) {
+        PlayerSkinChanger.getPlugin().getLogger().info("Player joined: cheking for skin " + player.getName());
+		if(PlayerSkinChanger.getPlugin().getSkin(player.getName()) == null) {
+            PlayerSkinChanger.getPlugin().getLogger().info("Player joined: doesn't have skin");
 			return;
 		}
+        PlayerSkinChanger.getPlugin().getLogger().info("Player joined: have skin");
 		final BukkitScheduler scheduler = Bukkit.getScheduler();
-		final Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerSkinChanger");
 		final PluginConfig config = PlayerSkinChanger.getPluginConfig();
+        final PlayerSkinChanger plugin = PlayerSkinChanger.getPlugin();
 		scheduler.scheduleSyncDelayedTask(plugin, new Runnable() { // http://forums.bukkit.org/threads/class-change-the-skin-of-a-player-without-changing-the-name-yes-its-possible-no-spout.273251/page-5#post-2754114
 			
 			@Override

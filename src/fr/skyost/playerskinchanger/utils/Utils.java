@@ -4,17 +4,18 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 
-import fr.skyost.playerskinchanger.PlayerData;
 import fr.skyost.playerskinchanger.PlayerSkinChanger;
 
 public class Utils {
 	
 	public static final Boolean loadPlayerData(final String player) {
 		try {
-			final String rawData = PlayerSkinChanger.getRAWCache().get(player);
-			if(rawData != null) {
-				final PlayerData data = PlayerData.fromJson(rawData);
-				PlayerSkinChanger.getModifier().changeDisplay(player, data.skin, data.name);
+            String skin = PlayerSkinChanger.getPlugin().getSkin(player);
+            String name = PlayerSkinChanger.getPlugin().getName(player);
+            PlayerSkinChanger.getPlugin().getLogger().info("Cheking skin for " + player + " : " + skin + "; " + name);
+			if(skin != null) {
+                PlayerSkinChanger.getPlugin().getLogger().info("Going to change skin for " + player + " : " + skin + "; " + name);
+				PlayerSkinChanger.getModifier().changeDisplay(player, skin, name);
 				return true;
 			}
 			return null;

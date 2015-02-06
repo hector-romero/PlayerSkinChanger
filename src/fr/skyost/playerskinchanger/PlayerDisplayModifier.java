@@ -7,6 +7,7 @@ import java.net.URLConnection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 // For ProtocolLib 3.3.1 and lower
@@ -16,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 // For ProtocolLib 3.4.0
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 
+import net.minecraft.util.com.mojang.authlib.GameProfile;
+import net.minecraft.util.com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -39,6 +42,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Maps;
 import com.google.common.io.CharStreams;
 import com.google.common.io.InputSupplier;
+import org.json.simple.parser.ParseException;
 
 public class PlayerDisplayModifier {
 
@@ -109,9 +113,19 @@ public class PlayerDisplayModifier {
 		});
 	}
 
+    private JSONObject getProfileJSON (String skinOwner) throws ExecutionException, ParseException{
+        String json = PlayerSkinChanger.getPlugin().getProfileCache(skinOwner);
+        if(json == null){
+            json = profileCache.get(skinOwner);
+            PlayerSkinChanger.getPlugin().setProfileCache(skinOwner, json);
+        }
+        return (JSONObject)new JSONParser().parse(json);
+
+    }
 	private void updateSkin(WrappedGameProfile profile, String skinOwner) {
 		try {
-			JSONObject json = (JSONObject)new JSONParser().parse(profileCache.get(skinOwner));
+
+			JSONObject json = getProfileJSON(skinOwner);
 			JSONArray properties = (JSONArray)json.get("properties");
 
 			for(int i = 0; i < properties.size(); i++) {
@@ -122,11 +136,12 @@ public class PlayerDisplayModifier {
 
 				// Uncomment for ProtocolLib 3.4.0
 				profile.getProperties().put(name, new WrappedSignedProperty(name, value, signature));
-				//((GameProfile)profile.getHandle()).getProperties().put(name, new Property(name, value, signature));
+//				((GameProfile)profile.getHandle()).getProperties().put(name, new Property(name, value, signature));
 			}
 		}
 		catch(Exception e) {
 			// ProtocolLib will throttle the number of exceptions printed to the console log
+            Bukkit.getLogger().info("Error fetching player profile: " + skinOwner);
 			throw new RuntimeException("Cannot fetch profile for " + skinOwner, e);
 		}
 	}
